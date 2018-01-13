@@ -29,23 +29,26 @@ int shellSort(vector<int> array, vector<int> gaps) {
 	int gap;
 	do{
 		gap = gaps[counter];
-		for(int i = 0; i + gap < array.size(); i++) {
+		for(int j = 0; j < gap; j++) {
+		for(int i = j; i + gap < array.size(); i+=gap) {
 			//cout << "porownuje array[" << i << "]=" << array[i] << " i array[" << i + gap << "]=" << array[i+gap] << endl;
 			computational_complexity++;
-			if(array[i] > array[i+gap]) computational_complexity = shellSortSwap(array, i, gap, computational_complexity);
+			//if(array[i] > array[i+gap]) computational_complexity = shellSortSwap(array, i, gap, computational_complexity);
+			if(array[i] > array[i+gap]) shellSortSwap(array, i, gap, computational_complexity);
 		}		
+		}
 		counter++;
 	}while(counter < gaps.size());
 	//displayVector(array, "Po sortowaniu");
 	return computational_complexity;
 }
 int main() {
-	int max_array_size = 20, data_case = 1, gap;
+	int max_array_size = 1000, data_case = 1, gap;
 	float computational_complexity;
 	
 	cout << "% of wikipedia's worst-case time complexity";
 	
-	for(int array_size = 10; array_size < max_array_size; array_size++){
+	for(int array_size = 10; array_size <= max_array_size; array_size += 10){
 			
 		vector<int> array;
 		vector<int> gaps;
@@ -71,9 +74,9 @@ int main() {
 				//cout << "Worst case data:" << endl;
 				break;
 		}
-		//displayVector(array, "");	
+		//displayVector(array, "Array:");	
 		//cout << endl;
-		cout << endl << "Array size: " << array.size() << "\t";
+		cout << endl << "Array size: " << array.size() << "  \t  ";
 		
 		gaps.clear(); // Shell 1959
 		gap = array_size;
@@ -83,7 +86,7 @@ int main() {
 		}
 		//displayVector(gaps, "Shell's (1959) gaps");	
 		computational_complexity = pow(array_size, 2);
-		cout << "\tSH: " << (int)(100 * shellSort(array, gaps) / computational_complexity) << "%  ";
+		cout << "\tSHELL: " << (int)ceil(100 * shellSort(array, gaps) / computational_complexity) << "%  ";
 		
 		gaps.clear(); // Hibbard 1963	
 		for(int i = 1; ; i++) {
@@ -93,8 +96,8 @@ int main() {
 		}
 		reverse(gaps.begin(),gaps.end());
 		//displayVector(gaps, "Hibbard's (1963) gaps");
-		computational_complexity = pow(array_size, 3/2);
-		cout << "\tHI: " << (int)(100 * shellSort(array, gaps) / computational_complexity) << "% ";
+		computational_complexity = pow(array_size, (float)3/(float)2);
+		cout << "\tHIBBARD: " << (int)(100 * shellSort(array, gaps) / computational_complexity) << "% ";
 		
 		gaps.clear(); // Pratt 1971
 		int pmax = log2(array_size);
@@ -107,8 +110,9 @@ int main() {
 		sort(gaps.begin(), gaps.end());
 		reverse(gaps.begin(),gaps.end());
 		//displayVector(gaps, "Pratt's (1971) gaps");
-		computational_complexity = array_size * log2(array_size)/log2(10) * log2(array_size)/log2(10);
-		cout << "\tPR: " << (int)(100 * shellSort(array, gaps) / computational_complexity) << "% ";
+		//computational_complexity = array_size * log2(array_size)/log2(10) * log2(array_size)/log2(10);
+		computational_complexity = array_size * log(array_size) * log(array_size);
+		cout << "\tPRATT: " << (int)(100 * shellSort(array, gaps) / computational_complexity) << "% ";
 		
 		gaps.clear(); // Knuth 1973
 		for(int i = 1; ; i++) {
@@ -117,8 +121,8 @@ int main() {
 		}
 		reverse(gaps.begin(),gaps.end());
 		//displayVector(gaps, "Knuth's (1973) gaps");
-		computational_complexity = pow(array_size, 3/2);
-		cout << "\tKN: " << (int)(100 * shellSort(array, gaps) / computational_complexity) << "% ";
+		computational_complexity = pow(array_size, (float)3/(float)2);
+		cout << "\tKNUTH: " << (int)(100 * shellSort(array, gaps) / computational_complexity) << "% ";
 		
 		// Sedgewick 1986
 		gaps.clear();
@@ -129,8 +133,8 @@ int main() {
 		}
 		reverse(gaps.begin(),gaps.end());
 		//displayVector(gaps, "Sedgewick's (1986) gaps");
-		computational_complexity = pow(array_size, 4/3);
-		cout << "\tSE: " << (int)(100 * shellSort(array, gaps) / computational_complexity) << "% ";
+		computational_complexity = pow(array_size, (float)4/(float)3);
+		cout << "\tSEDGEWICK: " << (int)(100 * shellSort(array, gaps) / computational_complexity) << "% ";
 		
 	}
 	cout << endl;
